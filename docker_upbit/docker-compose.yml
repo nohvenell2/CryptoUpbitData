@@ -1,0 +1,11 @@
+services:
+  upbit-data:
+    build:
+      context: ..
+      dockerfile: docker_upbit/Dockerfile
+    environment:
+      - TZ=Asia/Seoul
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/var/log

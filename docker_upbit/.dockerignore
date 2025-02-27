@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.venv
+env/
+venv/
+ENV/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# 로그 파일
+logs/
+*.log
+
+# 불필요한 앱 코드
+app/coingecko/
+
+# Poetry
+poetry.lock
+
+# 기타
+.DS_Store
+*.swp
+*.swo
+util/
+temp*.py

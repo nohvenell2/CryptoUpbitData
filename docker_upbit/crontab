@@ -1,0 +1,5 @@
+SHELL=/bin/bash
+BASH_ENV=/root/project_env.env
+1,10,15 9 * * * cd /app/upbit/data && /usr/local/bin/python -m run_saveprice_daily >> /var/log/cron.log 2>&1
+1,10,15 * * * * cd /app/upbit/data && /usr/local/bin/python -m run_saveprice_minute >> /var/log/cron.log 2>&1
+### END of crontab ###
