@@ -8,9 +8,10 @@ import os
 try:
     from dotenv import load_dotenv
     load_dotenv()
-    print("개발 환경: .env 파일을 로드했습니다.")
+    #print("개발 환경: .env 파일을 로드했습니다.")
 except ImportError:
-    print("Docker 환경: 환경변수를 직접 사용합니다.")
+    #print("Docker 환경: 환경변수를 직접 사용합니다.")
+    pass
 
 # 환경변수 가져오기 (개발환경의 .env 파일 또는 Docker의 환경변수)
 try:
@@ -56,7 +57,14 @@ def save_daily_price(market,year=3):
         engine = create_engine(DATABASE_URL)
         
         # 임시 테이블에 데이터 저장
-        temp_table = f"temp_{market.replace('-', '_').lower()}"
+        timestamp_suffix = datetime.now().strftime('%Y%m%d_%H%M%S')
+        temp_table = f"temp_{market.replace('-', '_').lower()}_{timestamp_suffix}"
+        
+        # 기존 임시 테이블이 있다면 먼저 삭제
+        with engine.connect() as conn:
+            conn.execute(text(f"DROP TABLE IF EXISTS {temp_table}"))
+            conn.commit()
+            
         df.to_sql(temp_table, engine, if_exists='replace', index=False,
                  dtype={
                      'market': String(20),
@@ -133,7 +141,14 @@ def save_minute_price(market,days=1,candle_type='1hour'):
         engine = create_engine(DATABASE_URL)
         
         # 임시 테이블에 데이터 저장
-        temp_table = f"temp_{market.replace('-', '_').lower()}"
+        timestamp_suffix = datetime.now().strftime('%Y%m%d_%H%M%S')
+        temp_table = f"temp_{market.replace('-', '_').lower()}_{timestamp_suffix}"
+        
+        # 기존 임시 테이블이 있다면 먼저 삭제
+        with engine.connect() as conn:
+            conn.execute(text(f"DROP TABLE IF EXISTS {temp_table}"))
+            conn.commit()
+            
         df.to_sql(temp_table, engine, if_exists='replace', index=False,
                  dtype={
                      'market': String(20),

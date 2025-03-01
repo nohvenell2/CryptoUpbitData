@@ -4,7 +4,7 @@ import time
 from fetch_candle import fetch_candle_day, fetch_candle_min
 
 DELAY = 0.3
-def fetch_historical_data_daily(market, years=3):
+def fetch_historical_data_daily(market, years=3, debug=False):
     """
     지정된 기간(년)만큼의 과거 일봉 데이터를 가져오는 함수
     
@@ -24,7 +24,8 @@ def fetch_historical_data_daily(market, years=3):
         if years == 0:
             total_days = 7
         remaining_days = total_days
-        print(f"{market} {years}년치 데이터 수집 시작...")
+        if debug:
+            print(f"{market} {years}년치 데이터 수집 시작...")
         
         while remaining_days > 0:
             # 현재 배치에서 가져올 데이터 수 결정
@@ -38,7 +39,7 @@ def fetch_historical_data_daily(market, years=3):
             )
             
             if df_batch is None or df_batch.empty:
-                print(f"데이터 가져오기 실패: {current_time}")
+                print(f"{market} {years}년치 데이터 가져오기 실패: {current_time}")
                 break
                 
             # 데이터 저장
@@ -65,8 +66,9 @@ def fetch_historical_data_daily(market, years=3):
         final_df = final_df.drop_duplicates(subset=['market', 'timestamp_utc'])
         final_df = final_df.sort_values('timestamp_utc')
         
-        print(f"{market} {years}년치 데이터 수집 완료: 총 {len(final_df)}개 데이터")
-        print(f"기간: {final_df['timestamp_utc'].min()} ~ {final_df['timestamp_utc'].max()}")
+        if debug:
+            print(f"{market} {years}년치 데이터 수집 완료: 총 {len(final_df)}개 데이터")
+            print(f"기간: {final_df['timestamp_utc'].min()} ~ {final_df['timestamp_utc'].max()}")
         
         return final_df
         
@@ -74,7 +76,7 @@ def fetch_historical_data_daily(market, years=3):
         print(f"데이터 수집 중 오류 발생: {e}")
         return None
 
-def fetch_historical_data_min(market, days=365, candle_type='5min'):
+def fetch_historical_data_min(market, days=365, candle_type='5min', debug=False):
     """
     지정된 기간(일)만큼의 과거 분봉 데이터를 가져오는 함수
     
@@ -106,8 +108,8 @@ def fetch_historical_data_min(market, days=365, candle_type='5min'):
         
         total_candles = days * candles_per_day
         remaining_candles = total_candles
-        
-        print(f"{market} {days}일치 {candle_type} 데이터 수집 시작...")
+        if debug:
+            print(f"{market} {days}일치 {candle_type} 데이터 수집 시작...")
         
         while remaining_candles > 0:
             # 현재 배치에서 가져올 데이터 수 결정
@@ -122,7 +124,7 @@ def fetch_historical_data_min(market, days=365, candle_type='5min'):
             )
             
             if df_batch is None or df_batch.empty:
-                print(f"데이터 가져오기 실패: {current_time}")
+                print(f"{market} {days}일치 {candle_type} 데이터 가져오기 실패: {current_time}")
                 break
                 
             # 데이터 저장
@@ -149,8 +151,9 @@ def fetch_historical_data_min(market, days=365, candle_type='5min'):
         final_df = final_df.drop_duplicates(subset=['market', 'timestamp_utc'])
         final_df = final_df.sort_values('timestamp_utc')
         
-        print(f"{market} {days}일치 {candle_type} 데이터 수집 완료: 총 {len(final_df)}개 데이터")
-        print(f"기간: {final_df['timestamp_utc'].min()} ~ {final_df['timestamp_utc'].max()}")
+        if debug:
+            print(f"{market} {days}일치 {candle_type} 데이터 수집 완료: 총 {len(final_df)}개 데이터")
+            print(f"기간: {final_df['timestamp_utc'].min()} ~ {final_df['timestamp_utc'].max()}")
         
         return final_df
         
